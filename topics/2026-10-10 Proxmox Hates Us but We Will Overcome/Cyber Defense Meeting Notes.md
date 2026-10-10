@@ -4,7 +4,7 @@ Oct 10, 2026 · @Chris Leonard
 
 | attending | huwebee                                                                  |
 | --------- | ------------------------------------------------------------------------ |
-| in person | Hans; Isaiah and Josh; Naomi and Jon; Kizek, Koa, and Angela; and Isaac  |
+| in person | Hans; Isaiah and Josh; Naomi and Jon; Kizek, Koa, and Angela; and Isaac |
 | remotely  | Karl                                                                     |
 
 ## Summary
@@ -20,13 +20,12 @@ The Proxmox web interface runs on port 8006. One possible cause of connection tr
    ```powershell
    telnet playground.iseage.org 8006
    ```
-
 2. Read the result:
 
    - An immediate "could not open connection" style failure means you could not reach anything on that port.&#32;
    - A timeout also indicates that you could not reach anything on that port. Timeouts may take 20 or more seconds.
    - Anything else (it connects, or the screen goes blank waiting) means something is listening. That counts as a success.&#32;
-   - After connecting, if you don't get kicked off the server quickly, you can a) use Ctrl-C to exit telnet, b) kill telnet, or c) use the escape sequence Ctrl-RightSquareBracket (`^]`), which will take you to a menu where you can type `close` and then `exit`.
+   - After connecting, if you don't get kicked off the server quickly, you can a) use Ctrl-C to exit telnet, b) kill telnet, or c) use the escape sequence Ctrl-RightSquareBracket (`^]`), which will take you to a menu where you can type `close` (optional, to end your connection) and then `quit` (which exits telnet).
 3. Don't forget the port number. Without it, telnet tries the default telnet port (23) and fails, which tells you nothing about port 8006.
 
 ## Ubuntu install tips
@@ -145,15 +144,15 @@ Your terminal is always "in" one folder, called the working directory. A new ter
 
 | Command                  | What it does                                                                           |
 | ------------------------ | -------------------------------------------------------------------------------------- |
-| `pwd`                    | Print working directory: shows which folder you are in                                 |
-| `ls`                     | List what's in a folder, in compact form                                               |
-| `ls -al`                 | `-a` = all, including hidden files; `-l` = long listing with details                   |
-| `ls -al --color=never`   | Same, without colors that are hard to read on some screens                             |
-| `cd <folder>`            | Change directory                                                                       |
-| `rm -rf <thing>`         | Remove:`-r` = recursive (folders and everything inside), `-f` = force (no prompts)     |
-| `sudo -i`                | Become root (the admin user), asking for your own password                             |
-| `echo $$`                | Show the process ID (PID) of your current shell                                        |
-| `ps auxf`                | List running processes as a tree                                                       |
+| `pwd`                  | Print working directory: shows which folder you are in                                 |
+| `ls`                   | List what's in a folder, in compact form                                               |
+| `ls -al`               | `-a` = all, including hidden files; `-l` = long listing with details               |
+| `ls -al --color=never` | Same, without colors that are hard to read on some screens                             |
+| `cd <folder>`          | Change directory                                                                       |
+| `rm -rf <thing>`       | Remove:`-r` = recursive (folders and everything inside), `-f` = force (no prompts) |
+| `sudo -i`              | Become root (the admin user), asking for your own password                             |
+| `echo $$`              | Show the process ID (PID) of your current shell                                        |
+| `ps auxf`              | List running processes as a tree                                                       |
 
 Flags can usually be combined (`-al`, `-rf`) and the order doesn't matter (`-rf` = `-fr`).
 
@@ -168,9 +167,9 @@ Three ways to name the same folder when you're already in `/etc`:
 
 | Style             | Example          | Meaning                                 |
 | ----------------- | ---------------- | --------------------------------------- |
-| Absolute path     | `/etc/systemd`   | Starts at the root, works from anywhere |
-| Relative with dot | `./systemd`      | Explicitly "in this folder"             |
-| Relative          | `systemd`        | Implicitly in this folder               |
+| Absolute path     | `/etc/systemd` | Starts at the root, works from anywhere |
+| Relative with dot | `./systemd`    | Explicitly "in this folder"             |
+| Relative          | `systemd`      | Implicitly in this folder               |
 
 Coach Chris prefers the `./` form for destructive commands: explicit is better than implicit, and it forces you to stare at exactly what you're about to delete.
 
