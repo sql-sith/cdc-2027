@@ -225,7 +225,6 @@ Every running program has a process ID (PID). `echo $$` shows your shell's PID (
 ## Homework
 
 - [ ] If you're still installing, get Ubuntu installed and working.
-- [ ] Leave your VM running for now (unusual for us) until we figure out what's wrong with the cluster.
 - [ ] Practice the snapshot cycle: take a snapshot, make a change you can check, roll back, and confirm the change is gone. The change can be as simple as creating and saving a file, or as dramatic as deleting `/etc` or killing PID 1.
 - [ ] Ensure that you have `virtviewer` installed. This lets you use SPICE terminals.
 
