@@ -26,7 +26,7 @@ The Proxmox web interface runs on port 8006. One possible cause of connection tr
    - An immediate "could not open connection" style failure means you could not reach anything on that port.&#32;
    - A timeout also indicates that you could not reach anything on that port. Timeouts may take 20 or more seconds.
    - Anything else (it connects, or the screen goes blank waiting) means something is listening. That counts as a success.&#32;
-   - After connecting, if you don't get kicked off the server quickly, you can a) use Ctrl-C to exit telnet, b) kill telnet, or c) use the escape sequence Ctrl-RightSquareBracket (`` ` ```^``\]`` ` ``)``,`` ``w``h``i``c``h`` ``w``il``l`` ``t``a``k``ey``o``ut``o`` ``a`` ``m``e``n``uw``h``e``r``ey``o``uc``a``nt``y``p``e`` `` ` ``c``l``o``s``e`` ` `` ``a``n``d`` ``t``h``e``n`` ``` ` ```q``ui```t`.``&#32;
+   - After connecting, if you don't get kicked off the server quickly, you can a) use Ctrl-C to exit telnet, b) kill telnet, or c) use the escape sequence Ctrl-RightSquareBracket (`^]`), which will take you to a menu where you can type `close` and then `exit`.
 3. Don't forget the port number. Without it, telnet tries the default telnet port (23) and fails, which tells you nothing about port 8006.
 
 ## Ubuntu install tips
