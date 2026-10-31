@@ -19,7 +19,8 @@ The Proxmox web interface runs on port 8006. One possible cause of connection tr
 
    ```powershell
    telnet playground.iseage.org 8006
-   ```
+   ```:
+
 2. Read the result:
 
    - An immediate "could not open connection" style failure means you could not reach anything on that port.&#32;
@@ -31,16 +32,16 @@ The Proxmox web interface runs on port 8006. One possible cause of connection tr
 ## Ubuntu install tips
 
 - Take the defaults on most screens.
-- When asked about installing third-party software, say no. Our VMs have no internet access, so the installer hangs trying to download it.
+- When asked about installing third-party software, say no. Our VMs have no internet access during installation, so the installer hangs trying to download this software.
 - On the time zone screen, click near Chicago on the map or pick it from the drop-down.
 
 ## Discussion: is college worth it?
 
 There is no single answer, but a degree opens doors and a no-degree path demands unusual drive. We used a real example to dig in.
 
-### Jody's career path (shared with his permission; name changed)
+### Connor's career path
 
-Jody is a GoDaddy colleague of Coach Chris who is now in the final interviews for a job building AI safety guardrails.
+Connor is a GoDaddy colleague of Coach Chris who is now in the final interviews for a job building AI safety guardrails.
 
 - Dropped out of high school and got his GED.
 - Started answering support phones at GoDaddy, moved through a few teams, and landed in hosting, then advanced hosting support (the people who get escalations the phone team can't fix).
