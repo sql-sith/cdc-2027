@@ -74,4 +74,4 @@ You can restrict a user so that:
 - they cannot log in to your computer using the Desktop login; and
 - they cannot login in to your computer using the Console.
 
-Figure out how, then write up what you did. If you know how to make a GitHub PR, submit your write-up to the cdc-2027 repo under the `docs\ssh-lockdown` folder (make a subfolder is fine).
+Figure out how, then write up what you did. If you know how to make a GitHub PR, submit your write-up to the cdc-2027 repo under the `docs\ssh-lockdown` folder.
