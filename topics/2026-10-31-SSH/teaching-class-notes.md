@@ -58,11 +58,15 @@ This is a tricky thing to do. For example, if an account that can use `sudo` to 
 >
 > If you're still confused after that, you can post your questions on Zulip, or bring them to class.
 
-### Catchup
+### Homework #1: finish SSH setup
 
-If you were not present at today's meeting, or if you were present but had computer issues that kept you from staying caught up, the most important thing is to finish all the procedures above so that you're caught up. There is nothing to do for the sections marked as discussions.
+The most important thing is to finish setting up an SSH server on your VM. We need this so that you can work back and forth with a "lab partner" and so we'll be at the same setup level.
 
-### SSH settings
+- Running `systemctl status ssh` shows that SSH is running and enabled.
+- You have created a user on your VM.
+- You've tested that SSH works for your new user. For example, if your user is named `my_sshuser`, you can check their SSH access by running `ssh my_sshuser@<your_IP_address>`, supplying the IP of your own VM.
+
+### Homework #2: SSH settings
 
 As we saw today, settings for the SSH server software are set in `/etc/ssh/sshd_config/` and `/etc/ssh/sshd_config.d/`. Find a resource online that explains what the most important settins are and what to set them to. Write them down so we can discuss them next week.
 
