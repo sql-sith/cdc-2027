@@ -6,15 +6,21 @@
 |---|---|
 | 0:00 | Setup |
 | 0:15 | Exercise 1: Logging |
-| 0:25 | Exercise 2: Who is allowed in |
-| 0:40 | Exercise 3: Keys |
-| 0:55 | Exercise 4: The password trap |
-| 1:15 | Exercise 5: Root |
+| 0:25 | Exercise 2: Root |
+| 0:30 | Exercise 3: Who is allowed in |
+| 0:45 | Exercise 4: Keys |
+| 1:00 | Exercise 5: The password trap |
 | 1:20 | Wrap-up and cleanup |
 
 ## Setup (owner)
 
-1. Check what's in the settings folder:
+1. Make sure the SSH server is running. (The checking command you'll use later only works while it's running.)
+
+   ```bash
+   sudo systemctl start ssh
+   ```
+
+2. Check what's in the settings folder:
 
    ```bash
    ls /etc/ssh/sshd_config.d/
@@ -28,7 +34,7 @@
 
    Only files ending in `.conf` are read.
 
-2. Create the lab group and lab user. Give `labuser` a simple password and tell your partner what it is.
+3. Create the lab group and lab user. Give `labuser` a simple password and tell your partner what it is.
 
    ```bash
    sudo groupadd sshlab
@@ -44,7 +50,7 @@
 
    You also need the SSH user you made for homework. If you don't have one, make it now with `sudo adduser`, but **don't** add it to `sshlab`.
 
-3. Create the lab settings file. The name starts with `05` so SSH reads it first, which means its settings win.
+4. Create the lab settings file. The name starts with `05` so SSH reads it first, which means its settings win.
 
    ```bash
    sudoedit /etc/ssh/sshd_config.d/05-lab.conf
@@ -62,7 +68,7 @@
 
    This file is **insecure on purpose**. You'll fix it during the lab.
 
-4. Apply it, then give your partner your IP address:
+5. Apply it, then give your partner your IP address:
 
    ```bash
    sudo sshd -t && sudo systemctl restart ssh
@@ -91,13 +97,27 @@ You'll do this after every change:
    ```
 
 2. **Tester:** log in as `labuser` with the password, then type `exit`. Then try again and type the password **wrong** on purpose.
-3. **Owner:** what showed up in the log?
+
+   The first time you connect to a machine, SSH asks whether you trust it. Type `yes`.
+
+3. **Owner:** what showed up in the log? Hint: lines that start with `pam_unix` come from the password-checking library, not from SSH itself. Did SSH log anything of its own?
 4. **Owner:** change `LogLevel QUIET` to `LogLevel VERBOSE` and apply it. **Tester:** repeat step 2.
-5. **Owner:** find the lines for the successful login and the failed one. What do they tell you?
+5. **Owner:** find the SSH lines for the successful login (`Accepted ...`) and the failed one (`Failed ...`). What do they tell you that the `pam_unix` lines didn't?
 
 **Think about it:** an attacker who gets root might set `LogLevel QUIET`. How would you notice?
 
-## Exercise 2: Who is allowed in (`AllowGroups`)
+## Exercise 2: Root (`PermitRootLogin`)
+
+1. **Tester:** try `ssh root@<partner IP>` and guess some passwords. The setting says `yes`, so why can't you get in?
+2. **Owner:** find root's failed attempts in the log. Then run this. What does the `L` mean?
+
+   ```bash
+   sudo passwd -S root
+   ```
+
+3. **Owner:** set `PermitRootLogin no` anyway and apply it. Why bother, if root is already locked?
+
+## Exercise 3: Who is allowed in (`AllowGroups`)
 
 1. **Tester:** log in as your partner's **homework user** with its password. It should work.
 2. **Owner:** remove the `#` in front of `AllowGroups sshlab` and apply it.
@@ -117,7 +137,7 @@ You'll do this after every change:
 
 **Notice:** the tester only sees "Permission denied." The owner's log says *why*. Attackers get less information than defenders do.
 
-## Exercise 3: Keys
+## Exercise 4: Keys
 
 1. **Tester:** make a key on your own VM. Give it a passphrase.
 
@@ -132,13 +152,16 @@ You'll do this after every change:
    ```
 
 3. **Tester:** log in as `labuser`. You might be asked for your **key's passphrase**, but not `labuser`'s password. What's the difference?
+
+   On Ubuntu Desktop, the passphrase question may pop up as a window instead of in the terminal, and it may offer to remember the passphrase for you.
+
 4. **Owner:** in the log, find the `Accepted publickey` line and read out the `SHA256:...` value. **Tester:** compare it with your key's fingerprint:
 
    ```bash
    ssh-keygen -lf ~/.ssh/id_ed25519.pub
    ```
 
-## Exercise 4: The password trap
+## Exercise 5: The password trap
 
 Goal: stop **all** password logins, while keys keep working.
 
@@ -149,11 +172,11 @@ Goal: stop **all** password logins, while keys keep working.
    ssh -o PubkeyAuthentication=no labuser@<partner IP>
    ```
 
-   Did you get in? Look closely at the password prompt. Is it worded the same as before?
+   Did you get in?
 
 3. **Tester:** run it again with `-v` added, and press **Ctrl+C** at the password prompt. Scroll up and find the line `Authentications that can continue:`. What does it list?
 4. **Owner:** figure out which setting is still letting passwords in, change it, and apply it. **Tester:** test again.
-5. Together, try all four combinations and fill in this table:
+5. Together, try all four combinations and fill in this table. **Tester:** keep the `-o PubkeyAuthentication=no` option on every try, or your key from Exercise 4 will log you in and spoil the result.
 
    | `PasswordAuthentication` | `KbdInteractiveAuthentication` | Password login works? | "can continue" list |
    |---|---|---|---|
@@ -162,34 +185,27 @@ Goal: stop **all** password logins, while keys keep working.
    | yes | no | | |
    | no | no | | |
 
+   Look closely at the password prompt each time. Is it always worded the same way? When does it change?
+
 6. Finish with both set to `no`. **Tester:** confirm your key login still works.
-
-## Exercise 5: Root (`PermitRootLogin`)
-
-1. **Tester:** try `ssh root@<partner IP>` and guess some passwords. The setting says `yes`, so why can't you get in?
-2. **Owner:** run this. What does the `L` mean?
-
-   ```bash
-   sudo passwd -S root
-   ```
-
-3. **Owner:** set `PermitRootLogin no` anyway and apply it. Why bother, if root is already locked?
 
 ## Stretch (if you finish early)
 
 - **`MaxAuthTries`:** temporarily set `PasswordAuthentication yes` and `MaxAuthTries 2`. **Tester:** type wrong passwords. What happens, and what does the log say? Set both back afterward.
 - **`Banner`:** put a warning in `/etc/issue.net` with `sudoedit`, then add `Banner /etc/issue.net`. **Tester:** log in and read it.
-- **`sshd -T -C`:** ask SSH what would happen for a specific user without logging in:
+- **`sshd -T -C`:** ask SSH which settings would apply to one specific user, without logging in:
 
   ```bash
-  sudo sshd -T -C user=labuser,host=x,addr=10.0.0.5 | grep -i allowgroups
+  sudo sshd -T -C user=labuser,host=x,addr=10.0.0.5 | grep -i passwordauth
   ```
+
+  Here the answer is the same as plain `sshd -T`. It only differs when the settings include a `Match` block, which is how one server gives different rules to different users or networks.
 
 ## Wrap-up questions
 
 1. Which setting surprised you most?
 2. You set `PasswordAuthentication no` and it didn't fully work. What habit catches mistakes like that?
-3. Exercise 2 gave the tester much less information than the owner. Why is that good for defenders?
+3. Exercise 3 gave the tester much less information than the owner. Why is that good for defenders?
 
 ## Cleanup (or keep it for next week)
 
