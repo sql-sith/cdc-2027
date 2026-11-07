@@ -23,7 +23,7 @@ SSH Server can run on almost any operating system. To set it up on your Ubuntu D
 ```bash
 # what does the next command do?
 sudo apt update
-sudo install openssh-server
+sudo apt install openssh-server
 ```
 
 To enable Ubuntu and make it run at every startup:
