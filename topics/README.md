@@ -33,4 +33,4 @@ Tell us in Zulip, or fix it yourself and open a pull request. Edit the file in `
 
 To make a PDF that matches the ones already here: install the **Markdown PDF** extension (by yzane) in VS Code, open the `.md` file, press `Ctrl+Shift+P`, run **Markdown PDF: Export (pdf)**, and move the resulting PDF from `source/` up to the meeting folder, replacing the old one.
 
-One gotcha: the file has to be open in VS Code's plain text editor. If it's open in a different Markdown editor (such as the Office Markdown Editor), the extension says there is no active editor. Close that view, open the file as plain text, and run the export again.
+One gotcha: the export works on the editor tab that currently has focus, and that tab has to be VS Code's default text editor. The file can be open in other views at the same time, but if the focused tab is a Markdown preview or another Markdown editor (even VS Code's built-in one, or the Office Markdown Editor), the extension says there is no active editor. Click into the plain text tab and run the export again.
