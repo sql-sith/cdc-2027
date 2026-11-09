@@ -9,9 +9,8 @@ Meeting videos are **not** stored here, because GitHub isn't meant for large fil
 ## How the folders are organized
 
 - Folder names are `YYYY-MM-DD-Short-Topic`, so they sort in meeting order.
-- **PDFs** at the top level of a folder are the documents to read. They open in your browser straight from GitHub.
-- The **`source/`** folder holds the editable originals (Markdown, Word, PowerPoint) that the PDFs were made from. You only need it if you want to fix or build on a document.
-- Slides and images live at the top level when there's no PDF version of them.
+- The **top level** of a meeting folder holds the files you'll use or refer to: handouts, notes, slides, and diagrams. Most are PDFs, which open in your browser straight from GitHub.
+- The **`source/`** folder holds the Markdown and other originals that the top-level files were built from. You only need it if you want to fix or build on a document.
 
 Some notes are AI-generated from the meeting recording, and they say so at the top. They're useful, but check them against the recording or ask in Zulip if something looks off.
 

@@ -6,7 +6,7 @@ We fixed last week's network problem, then installed and used the SSH server for
 
 1. Switch the VM display from SPICE to VirtIO GPU (and set display scaling to 200% if things look tiny).
 2. The `ip` command, the loopback address, and what `/24` means.
-3. What went wrong last week: the GUI saved our mask as `/0`, so each VM thought nothing else was on its network.
+3. What went wrong last week: the GUI saved our mask as `/0`, so each VM thought every address in the world was on its own local network.
 4. The correct network settings:
    - Address: `144.76.90.<your VM ID>`
    - Subnet mask: `255.255.255.0` (type the dotted form, not `/24`)
@@ -31,9 +31,9 @@ We fixed last week's network problem, then installed and used the SSH server for
 
 ## Files
 
-| File | What it is |
-|---|---|
-| [cyber-defense-2026-10-24-session-guide.pdf](cyber-defense-2026-10-24-session-guide.pdf) | The full write-up, one section per item above, with the commands and the reasoning |
-| [cdc-2026-10-24-topic-summary.pdf](cdc-2026-10-24-topic-summary.pdf) | A one-page table of the same 14 items. Section numbers match the guide |
-| [CDC-2026-10-24.md](CDC-2026-10-24.md) | Chris's working notes: the VM build steps, the `/24` fix, and the network and `apt` proxy settings |
-| [source/](source/) | Markdown originals of the guide and the summary |
+| File                                                                                     | What it is                                                                                             |
+| ---------------------------------------------------------------------------------------  | ------------------------------------------------------------------------------------------------------ |
+| [cyber-defense-2026-10-24-session-guide.pdf](cyber-defense-2026-10-24-session-guide.pdf) | The full write-up, one section per item above, with the commands and the reasoning                     |
+| [cdc-2026-10-24-topic-summary.pdf](cdc-2026-10-24-topic-summary.pdf)                     | A one-page table of the same 14 items. Section numbers match the guide                                 |
+| [CDC-2026-10-24.md](CDC-2026-10-24.md)                                                   | Chris's working notes: the VM build steps, the `/24` fix, and the network and `apt` proxy settings     |
+| [source/](source/)                                                                       | Markdown originals of the guide and the summary                                                        |
