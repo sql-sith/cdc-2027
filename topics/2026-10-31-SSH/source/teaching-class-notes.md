@@ -26,7 +26,22 @@ sudo apt update
 sudo apt install openssh-server
 ```
 
-To enable Ubuntu and make it run at every startup:
+To start SSH Server and make it run at every Ubuntu startup:
+
+```bash
+# start ssh server:
+sudo systemctl start ssh
+
+# configure ssh server to auto-start when ubuntu starts:
+sudo systemctl enable ssh
+```
+
+If you prefer, you can do both of these things with one command instead of two:
+
+```bash
+# start ssh server and configure it to auto-start with a single command:
+sudo systemctl enable --now ssh
+```
 
 ## Adding SSH users to your Ubuntu VM
 

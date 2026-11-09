@@ -19,7 +19,7 @@ The Proxmox web interface runs on port 8006. One possible cause of connection tr
 
    ```powershell
    telnet playground.iseage.org 8006
-   ```:
+   ```
 
 2. Read the result:
 
@@ -231,12 +231,12 @@ Every running program has a process ID (PID). `echo $$` shows your shell's PID (
 On Windows, run this command to install virt-viewer&#32;
 
 ```powershell
-winget install --Id RedHat.VirtViewer --Source winget --Exact 
+winget install --Id RedHat.VirtViewer --Source winget --Exact
 ```
 
 On Ubuntu, run these two commands:&#32;
 
 ```bash
-sudo apt-update
-sudo apt-upgrade virt-viewer 
+sudo apt update
+sudo apt install virt-viewer
 ```
