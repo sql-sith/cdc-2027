@@ -30,3 +30,5 @@ Some notes are AI-generated from the meeting recording, and they say so at the t
 ## Found a mistake?
 
 Tell us in Zulip, or fix it yourself and open a pull request. Edit the file in `source/`, then either regenerate the PDF and include it in your PR, or say in the PR that you'd like it generated for you. Give the PDF a try first; it's good practice, and it's how the rest of the documents here were made.
+
+To make the PDF the same way we do: install the **Markdown PDF** extension (by yzane) in VS Code, open the `.md` file, press `Ctrl+Shift+P`, run **Markdown PDF: Export (pdf)**, and move the resulting PDF from `source/` up to the meeting folder, replacing the old one.
