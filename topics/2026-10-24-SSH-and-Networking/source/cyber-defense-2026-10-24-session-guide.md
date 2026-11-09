@@ -29,11 +29,11 @@ Know this cold. It will be a question until nobody misses it. (Claude wrote that
 
 Last week the network config looked right but didn't behave right. Here's what happened: the address was entered in the GNOME network settings in a way that ended up saved as **/0** instead of /24, and the dialog accepted it without complaint.
 
-Think about what /0 means. Zero bits identify the network - so the *entire* address is treated as the host part. The VM concludes that nothing else is on its network. Literally nothing except itself is "local."
+Think about what /0 means. Zero bits identify the network, so the *entire* address is the host part, and the "network" is every address there is: 0.0.0.0 through 255.255.255.255. The VM concludes that every other computer in the world is sitting right next to it on its own local network, including the gateway, the DNS server, and Google.
 
-So when this VM tries to reach another VM that is actually sitting right next to it on the same subnet, it doesn't ARP for it directly - it hands the packet to the gateway. The gateway can forward it, but the reply path breaks down because the two machines disagree about what the network is. The result is asymmetric: a ping test showed packets transmitted and **zero** received.
+That's the opposite of the truth, where only 144.76.90.x is local and everything else has to go through the gateway. When a VM's idea of the network doesn't match the real one, its routing decisions go wrong in ways that are hard to spot: the address can be perfectly correct and the machine still can't talk to its neighbors. Our ping test showed packets transmitted and **zero** received.
 
-The lesson: the subnet mask has to match the actual network, or routing decisions go sideways in ways that are hard to spot. The address can be perfectly correct and the machine still can't talk to its neighbors.
+The lesson: the subnet mask has to match the actual network.
 
 ## 4. The correct network settings
 
@@ -151,34 +151,71 @@ The full connection syntax is:
 ssh yourusername@144.76.90.117
 ```
 
-Replace `yourusername` with your actual account name - the literal word "username" will not go well. You'll be prompted for your password, and then you have a shell on the server.
+Replace `yourusername` with your actual account name - the literal word "yourusername" will not go well. You'll be prompted for your password, and then you have a shell on the server.
 
-Two commands help when you're not sure which machine you're sitting on (easy to lose track of inside nested sessions): `hostname` tells you the machine's name, and `ip address` shows its address.
+Two commands help when you're not sure which machine you're sitting on (easy to lose track of inside nested sessions): `hostname` tells you the machine's name, and `ip address` (`ip a` for short) shows its address.
 
 Fun fact: you can SSH to the machine you're already on (`ssh you@its-own-address`). That sounds pointless, but it's a quick way to test that the SSH service itself is working when someone reports they can't connect from outside.
 
-## 13. Users, /etc/passwd, /etc/shadow, and permissions
+## 13. Brief Diversion: Users, /etc/passwd, /etc/shadow, and permissions
 
 **Home directories.** A new user gets a home directory at `/home/username`. Fresh out of the box it contains only default configuration files. And with default permissions, you cannot `cd` into *another* user's home directory - accounts are isolated from each other.
 
-**/etc/passwd.** This file lists every account: username, UID, primary group, home directory, and default login shell (ours is `/bin/bash`). The second field is just an `x`. That's a placeholder - this file *used* to hold password hashes, but a real hash is a long string, and that lone `x` says "the hash lives somewhere else now." The file stayed world-readable because various programs need to look up account info.
+**/etc/passwd.** This file lists every account: username, UID, primary group, home directory, and default login shell (ours is `/bin/bash`). The second field is just an `x`. That's a placeholder - this file *formerly* held password hashes, but a real hash is a long string, and that lone `x` says "the hash lives somewhere else now." The file stayed world-readable because various programs need to look up account info.
 
 **/etc/shadow.** This is where the hashes actually live. It's owned by root, group `shadow`, and ordinary users can't read it - you need root. Inside, real users have long hash strings. Accounts that show `!` or `*` where the hash would be are service accounts: they can't log in interactively at all, but root can still run processes under them. That's a deliberate security design - a web server account that nobody can log into is an account nobody can steal a password for.
 
-**/etc/group.** This is where group memberships are defined. For a user to have SSH privileges enabled, they must be assigned into the `_ssh` group. Here are the members of the `_ssh` group on 144.76.90.117, straight from the `/etc/group` file:
+> NOTE: the following paragraph has been updated. It used to say that membership in the _ssh group was required in order to use SSH to connect to a server. This is not true.
+
+**/etc/group.** This is where group memberships are defined. For example, many log files are owned by the root user or by a user named `syslog`, but are readable by a group named `adm`. Administrative users are added to this group so they can read these log files. You can see who is in this group by finding the line for `adm` in `/etc/group`. In the example below, the users `syslog`, `chris`, and `christopherl` are all members of the `adm` group.
 
 ```bash
-$ grep '_ssh' /etc/group
-_ssh:x:104:isaiah,naomi,kizek,chris,karl,hans,generic_user
+$ sudo grep 'adm:' /etc/group
+adm:x:4:syslog,chris,christopherl
 ```
 
-**Reading permissions.** In `ls -l` output, after the first special character, the next nine characters come in three groups of three:
+**Understanding file system permissions.** In `ls -l` output, after the first special character, the next nine characters should be read as three groups of three:
 
-- first three: what the **owner** can do
-- middle three: what the file's **group** can do
-- last three: what **everyone else** can do
+- First three: what the **user** who owns can do.
+  - We will frequently use the term **owner** to describe the user, but for permissions, try to use the word **user**. In some commands, the letter **u** stands for user. In these commands, the letter **o** is also an option, but it means **others**, not **owner** (see below).
+- Middle three: what the file's **group** can do.
+- Last three: what **others** ("everyone else") can do.
 
-Each group uses `r` (read), `w` (write), `x` (execute). So `/etc/shadow` showing owner `rw`, group `r`, others nothing - with owner `root` and group `shadow` - means root can read and write it, members of the shadow group can read it, and everyone else gets denied.
+Each group uses `r` (read), `w` (write), `x` (execute). The following command lists several log files that are owned by either `root` or `syslog`, and associated with the group `adm`. For each file:
+
+- The **user** rights (for `root` or `adm`, depending on the file) are `rw-`, meaning that the owner can read and write the file.
+- The **group** rights (for `adm` for each of these files) is `r--`, meaning that the group can read the file (and not write to it).
+- The **others** else logs that members of the `adm` group can read.
+
+Because of these permissions, you can only read these log files if **user** is the owner of the file, or you are in the `adm` **group**. No other users can read these files.
+
+> NOTE: The command I used is fancy;  you can get similar results by running `ls -al /var/log` and looking for the group `adm`. I decided to go with the fancy command so you can figure out what it does (or ask questions about it) if you're curious.
+
+```bash
+$ find /var/log -maxdepth 1 -type f -group adm -exec ls -l {} \; | column --table
+-rw-r-----  1  root    adm  61589    Oct  31  14:04  /var/log/dmesg
+-rw-r-----  1  syslog  adm  240353   Oct  18  00:00  /var/log/syslog.3.gz
+-rw-r-----  1  syslog  adm  1927756  Nov  1   00:00  /var/log/syslog.1
+-rw-r-----  1  root    adm  16577    Oct  17  00:05  /var/log/dmesg.2.gz
+-rw-r-----  1  root    adm  16385    Oct  24  09:26  /var/log/dmesg.1.gz
+-rw-r-----  1  syslog  adm  237764   Oct  25  00:00  /var/log/syslog.2.gz
+-rw-r-----  1  syslog  adm  80135    Oct  25  00:00  /var/log/kern.log.2.gz
+-rw-r-----  1  root    adm  59859    Oct  28  22:23  /var/log/dmesg.0
+-rw-r-----  1  syslog  adm  341503   Oct  31  23:59  /var/log/auth.log.1
+-rw-r-----  1  root    adm  16475    Oct  16  23:26  /var/log/dmesg.4.gz
+-rw-r-----  1  root    adm  4182     Oct  16  23:14  /var/log/cloud-init-output.log
+-rw-r-----  1  syslog  adm  317354   Nov  7   13:55  /var/log/auth.log
+-rw-r-----  1  syslog  adm  72362    Oct  16  23:14  /var/log/cloud-init.log
+-rw-r-----  1  syslog  adm  65140    Oct  18  00:00  /var/log/kern.log.3.gz
+-rw-r-----  1  syslog  adm  7288     Oct  17  23:59  /var/log/auth.log.3.gz
+-rw-r-----  1  syslog  adm  18886    Nov  7   13:17  /var/log/kern.log
+-rw-r-----  1  root    adm  16641    Oct  16  23:41  /var/log/dmesg.3.gz
+-rw-r-----  1  root    adm  0        Nov  1   00:00  /var/log/apport.log
+-rw-r-----  1  syslog  adm  28717    Oct  24  23:59  /var/log/auth.log.2.gz
+-rw-r-----  1  syslog  adm  1007566  Nov  7   13:55  /var/log/syslog
+-rw-r-----  1  syslog  adm  158431   Nov  1   00:00  /var/log/kern.log.1
+-rw-r-----  1  root    adm  349      Oct  31  14:04  /var/log/apport.log.1
+```
 
 ## 14. A look ahead: sshd_config
 

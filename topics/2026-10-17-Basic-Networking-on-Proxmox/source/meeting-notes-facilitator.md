@@ -1,4 +1,8 @@
-> NOTE: the notes say that the speaker is Chris almost all the time. This is because the only mic being used is the one in Chris's laptop.git 
+# Basic Networking on Proxmox
+
+*2026-10-17*
+
+NOTE: the notes say that the speaker is Chris almost all the time. This is because the only mic being used is the one in Chris's laptop.git
 
 AI-generated content in notes may be incorrect. Learn more
 Decisions
@@ -10,8 +14,6 @@ Decisions
   Open question
 - Resolve Network Manager/Netplan conflicts so static settings persist after reboot.
   Agenda
-
-- [ ]
 
 Meeting notes
 Meeting Documentation
