@@ -29,4 +29,4 @@ Some notes are AI-generated from the meeting recording, and they say so at the t
 
 ## Found a mistake?
 
-Tell us in Zulip, or fix it yourself and open a pull request. Edit the file in `source/` and mention it in the PR so the PDF can be regenerated.
+Tell us in Zulip, or fix it yourself and open a pull request. Edit the file in `source/`, then either regenerate the PDF and include it in your PR, or say in the PR that you'd like it generated for you. Give the PDF a try first; it's good practice, and it's how the rest of the documents here were made.
