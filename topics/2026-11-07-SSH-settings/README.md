@@ -20,6 +20,7 @@ You need a working SSH server and a user you can share with your partner. That w
 | [ssh-settings.pdf](ssh-settings.pdf) | The ranked settings tables |
 | [ssh-settings-lab.pdf](ssh-settings-lab.pdf) | The student lab handout: setup, five exercises, stretch work, wrap-up questions, cleanup |
 | [ssh-settings-lab-helpers.pdf](ssh-settings-lab-helpers.pdf) | For parents and helpers: a troubleshooting table and the answers. Do the lab before you read it |
-| [source/](source/) | Markdown originals of all three documents |
+| [class-notes.pdf](class-notes.pdf) | AI-generated notes from the meeting recording. Check them against the lab handout if something looks off |
+| [source/](source/) | Markdown originals of these documents |
 
 If a step in the lab doesn't behave the way the handout says, tell Chris. The handout was written from how OpenSSH is documented to work, and the helper sheet lists what hadn't been tried on a real VM yet.

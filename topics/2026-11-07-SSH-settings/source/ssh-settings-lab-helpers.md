@@ -5,7 +5,7 @@ For parents and helpers. The student handout is [ssh-settings-lab.md](ssh-settin
 ## Common problems
 
 | Problem | Fix |
-|---|---|
+| --- | --- |
 | `sshd -t` says `Missing privilege separation directory: /run/sshd` | SSH isn't running. That folder only exists while it runs. Run `sudo systemctl start ssh`, then try again. This happens on a freshly booted VM that nobody has connected to yet, and after a restart that failed. |
 | `sshd -t` prints an error with a line number | A typo in `05-lab.conf`. The error names the file and line. |
 | A change "didn't work" | Did they restart SSH? Run `sudo sshd -T \| grep -i <setting>` to check what the file says. |
@@ -45,7 +45,7 @@ For parents and helpers. The student handout is [ssh-settings-lab.md](ssh-settin
 ### Exercise 5
 
 | `PasswordAuthentication` | `KbdInteractiveAuthentication` | Password login works? | "can continue" list |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | yes | yes | yes | `publickey,password,keyboard-interactive` |
 | no | yes | **yes (the trap)** | `publickey,keyboard-interactive` |
 | yes | no | yes | `publickey,password` |
