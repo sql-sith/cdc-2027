@@ -1,3 +1,7 @@
+<!-- markdownlint-disable MD026 -->
+<!-- markdownlint-disable MD060 -->
+# Cyber Defense Club: SSH and Networking
+
 **Oct 24 session - what we covered**
 (full write-up in the session guide; section numbers match)
 

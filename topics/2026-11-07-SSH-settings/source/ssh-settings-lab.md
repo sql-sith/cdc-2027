@@ -1,16 +1,18 @@
+<!-- markdownlint-disable MD060 -->
+
 # SSH Settings Lab (90 minutes)
 
 **Roles:** On **your** VM, you are the **owner**: you change settings and watch the logs. On your **partner's** VM, you are the **tester**: you try to log in and report what happened. Every exercise, you do both at once.
 
-| Time | Part |
-|---|---|
-| 0:00 | Setup |
-| 0:15 | Exercise 1: Logging |
-| 0:25 | Exercise 2: Root |
+| Time | Part                          |
+| ---- | ----------------------------- |
+| 0:00 | Setup                         |
+| 0:15 | Exercise 1: Logging           |
+| 0:25 | Exercise 2: Root              |
 | 0:30 | Exercise 3: Who is allowed in |
-| 0:45 | Exercise 4: Keys |
+| 0:45 | Exercise 4: Keys              |
 | 1:00 | Exercise 5: The password trap |
-| 1:20 | Wrap-up and cleanup |
+| 1:20 | Wrap-up and cleanup           |
 
 ## Setup (owner)
 
@@ -49,7 +51,6 @@
    ```
 
    You also need the SSH user you made for homework. If you don't have one, make it now with `sudo adduser`, but **don't** add it to `sshlab`.
-
 4. Create the lab settings file. The name starts with `05` so SSH reads it first, which means its settings win.
 
    ```bash
@@ -67,7 +68,6 @@
    ```
 
    This file is **insecure on purpose**. You'll fix it during the lab.
-
 5. Apply it, then give your partner your IP address:
 
    ```bash
@@ -78,15 +78,17 @@
    ip -br a
    ```
 
-### The change routine
+### IMPORTANT: How to make a configuration change
 
-You'll do this after every change:
+Whenever you are asked to make a configuration change, perform these steps:
 
-1. Edit: `sudoedit /etc/ssh/sshd_config.d/05-lab.conf`
-2. Check and apply: `sudo sshd -t && sudo systemctl restart ssh`
-3. Confirm: `sudo sshd -T | grep -i <setting name>`
+1. Edit the config file: `sudoedit /etc/ssh/sshd_config.d/05-lab.conf`
+2. Make sure the config is valid: `sudo sshd -t`. It prints nothing when the file is good. If it prints an error, fix the file before you go on.
+3. Restart the SSH service: `sudo systemctl restart ssh`
+4. Confirm the setting has changed: `sudo sshd -T`
+   - If you want to filter for the setting you've changed: `sudo sshd -T | grep -i <setting name>`
 
-> **NOTE:** `sshd -T` reads the **file**, not the running server. If you skip step 2, `-T` shows your new value but SSH still behaves the old way.
+> **NOTE:** `sshd -T` reads the **file**, not the running server. If you skip step 3, `-T` shows your new value but SSH still behaves the old way.
 
 ## Exercise 1: Logging (`LogLevel`)
 
@@ -99,7 +101,6 @@ You'll do this after every change:
 2. **Tester:** log in as `labuser` with the password, then type `exit`. Then try again and type the password **wrong** on purpose.
 
    The first time you connect to a machine, SSH asks whether you trust it. Type `yes`.
-
 3. **Owner:** what showed up in the log? Hint: lines that start with `pam_unix` come from the password-checking library, not from SSH itself. Did SSH log anything of its own?
 4. **Owner:** change `LogLevel QUIET` to `LogLevel VERBOSE` and apply it. **Tester:** repeat step 2.
 5. **Owner:** find the SSH lines for the successful login (`Accepted ...`) and the failed one (`Failed ...`). What do they tell you that the `pam_unix` lines didn't?
@@ -154,7 +155,6 @@ You'll do this after every change:
 3. **Tester:** log in as `labuser`. You might be asked for your **key's passphrase**, but not `labuser`'s password. What's the difference?
 
    On Ubuntu Desktop, the passphrase question may pop up as a window instead of in the terminal, and it may offer to remember the passphrase for you.
-
 4. **Owner:** in the log, find the `Accepted publickey` line and read out the `SHA256:...` value. **Tester:** compare it with your key's fingerprint:
 
    ```bash
@@ -173,20 +173,18 @@ Goal: stop **all** password logins, while keys keep working.
    ```
 
    Did you get in?
-
 3. **Tester:** run it again with `-v` added, and press **Ctrl+C** at the password prompt. Scroll up and find the line `Authentications that can continue:`. What does it list?
 4. **Owner:** figure out which setting is still letting passwords in, change it, and apply it. **Tester:** test again.
 5. Together, try all four combinations and fill in this table. **Tester:** keep the `-o PubkeyAuthentication=no` option on every try, or your key from Exercise 4 will log you in and spoil the result.
 
    | `PasswordAuthentication` | `KbdInteractiveAuthentication` | Password login works? | "can continue" list |
-   |---|---|---|---|
-   | yes | yes | | |
-   | no | yes | | |
-   | yes | no | | |
-   | no | no | | |
+   | -------------------------- | -------------------------------- | --------------------- | ------------------- |
+   | yes                        | yes                              |                       |                     |
+   | no                         | yes                              |                       |                     |
+   | yes                        | no                               |                       |                     |
+   | no                         | no                               |                       |                     |
 
    Look closely at the password prompt each time. Is it always worded the same way? When does it change?
-
 6. Finish with both set to `no`. **Tester:** confirm your key login still works.
 
 ## Stretch (if you finish early)
